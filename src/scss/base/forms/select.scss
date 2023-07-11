@@ -1,6 +1,7 @@
 // <SELECT>
-// Снипет (HTML): sel
+// Сніппет (HTML): sel
 .select {
+	min-width: 0;
 	position: relative;
 	// .select__body
 	&__body {
@@ -19,6 +20,7 @@
 	// .select__value
 	&__value {
 		display: flex;
+		min-width: 0;
 		align-items: center;
 		height: rem(30);
 		padding: 0 rem(15);
@@ -45,9 +47,19 @@
 			}
 		}
 	}
+	// .select__content
+	&__content {
+		flex: 1 1 auto;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 	// .select__text
 	&__text {
 		flex: 1 1 auto;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 	&__input {
 		width: 100%;
@@ -58,7 +70,7 @@
 	&__options {
 		color: #000;
 		position: absolute;
-		top: 29px;
+		top: calc(100% - rem(1));
 		border-radius: 0 0 4px 4px;
 		min-width: 100%;
 		left: 0;
@@ -72,9 +84,9 @@
 	&__scroll {
 		overflow-y: auto;
 		overflow-x: hidden;
-		// Максимальная высота
+		// Максимальна висота
 		max-height: 200px;
-		// Стили скроллбара
+		// Стилі скроллбару
 		.simplebar-scrollbar {
 			&::before {
 				//opacity: 1;
@@ -84,7 +96,6 @@
 	// .select__option
 	&__option {
 		width: 100%;
-		display: block;
 		text-align: left;
 		cursor: pointer;
 		padding: 5px 15px;
@@ -99,7 +110,7 @@
 		}
 	}
 
-	// Конструкция дополнительных данных
+	// Конструкція додаткових даних
 	&__row {
 		display: inline-flex;
 		align-items: center;
@@ -109,7 +120,7 @@
 	&__text {
 	}
 
-	// Состояния селекта
+	// Стан селекту
 	&._select-open {
 		z-index: 5;
 	}

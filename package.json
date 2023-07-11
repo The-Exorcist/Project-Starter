@@ -7,6 +7,7 @@
 	"license": "",
 	"type": "module",
 	"scripts": {
+		"start": "npm i --legacy-peer-deps",
 		"dev": "gulp && webpack serve --progress -c config/webpack.dev.js",
 		"build": "gulp build --build",
 		"sprite": "gulp sprite",
@@ -18,11 +19,11 @@
 		"bem": "fls-bemtree-from-html"
 	},
 	"devDependencies": {
+		"@types/isotope-layout": "^3.0.9",
 		"copy-webpack-plugin": "latest",
 		"css-loader": "latest",
 		"del": "latest",
 		"file-include-webpack-plugin-replace": "latest",
-		"fls-bemtree-from-html": "^1.0.0",
 		"gulp": "latest",
 		"gulp-autoprefixer": "latest",
 		"gulp-clean-css": "latest",
@@ -46,6 +47,7 @@
 		"gulp-zip": "latest",
 		"html-webpack-plugin": "latest",
 		"inputmask": "latest",
+		"js-datepicker": "latest",
 		"lightgallery": "latest",
 		"load-plugins": "latest",
 		"mini-css-extract-plugin": "2.4.7",
@@ -70,6 +72,8 @@
 		"webpack-stream": "latest"
 	},
 	"dependencies": {
+		"gulp-cheerio": "^1.0.0",
+		"isotope-layout": "^3.0.6",
 		"simplebar": "latest"
 	}
 }

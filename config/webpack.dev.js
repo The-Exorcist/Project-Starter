@@ -53,13 +53,16 @@ const config = {
 		compress: true,
 		port: 'auto',
 		hot: true,
-		host: 'local-ip',
-		// Расскоментировать на слабом ПК
+		host: 'local-ip', // localhost
+
+		// Розкоментувати на слабкому ПК
+		// (в режимі розробника папка результатом (dist) буде створюватися на диску)
 		/*
 		devMiddleware: {
 			writeToDisk: true,
 		},
 		*/
+
 		watchFiles: [
 			`${paths.src}/**/*.html`,
 			`${paths.src}/**/*.pug`,

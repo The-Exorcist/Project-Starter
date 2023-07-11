@@ -4,35 +4,46 @@
 
 	require 'phpmailer/src/Exception.php';
 	require 'phpmailer/src/PHPMailer.php';
+	require 'phpmailer/src/SMTP.php';
 
 	$mail = new PHPMailer(true);
 	$mail->CharSet = 'UTF-8';
 	$mail->setLanguage('ru', 'phpmailer/language/');
 	$mail->IsHTML(true);
 
-	//От кого письмо
-	$mail->setFrom('', 'Фрилансер по жизни');
-	//Кому отправить
-	$mail->addAddress('');
-	//Тема письма
-	$mail->Subject = 'Привет! Это "Фрилансер по жизни"';
+	/*
+	$mail->isSMTP();                                            //Send using SMTP
+	$mail->Host       = 'smtp.example.com';                     //Set the SMTP server to send through
+	$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+	$mail->Username   = 'user@example.com';                     //SMTP username
+	$mail->Password   = 'secret';                               //SMTP password
+	$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+	$mail->Port       = 465;                 
+	*/
 
-	//Тело письма
-	$body = '<h1>Встречайте супер письмо!</h1>';
+	//Від кого лист
+	$mail->setFrom('from@gmail.com', 'Фрілансер по життю'); // Вказати потрібний E-mail
+	//Кому відправити
+	$mail->addAddress('to@gmail.com'); // Вказати потрібний E-mail
+	//Тема листа
+	$mail->Subject = 'Вітання! Це "Фрілансер по життю"';
 
-	//if(trim(!empty($_POST['name']))){
-		//$body.='';
+	//Тіло листа
+	$body = '<h1>Зустрічайте супер листа!</h1>';
+
+	//if(trim(!empty($_POST['email']))){
+		//$body.=$_POST['email'];
 	//}	
 	
 	/*
-	//Прикрепить файл
+	//Прикріпити файл
 	if (!empty($_FILES['image']['tmp_name'])) {
-		//путь загрузки файла
+		//шлях завантаження файлу
 		$filePath = __DIR__ . "/files/sendmail/attachments/" . $_FILES['image']['name']; 
-		//грузим файл
+		//грузимо файл
 		if (copy($_FILES['image']['tmp_name'], $filePath)){
 			$fileAttach = $filePath;
-			$body.='<p><strong>Фото в приложении</strong>';
+			$body.='<p><strong>Фото у додатку</strong>';
 			$mail->addAttachment($fileAttach);
 		}
 	}
@@ -40,11 +51,11 @@
 
 	$mail->Body = $body;
 
-	//Отправляем
+	//Відправляємо
 	if (!$mail->send()) {
-		$message = 'Ошибка';
+		$message = 'Помилка';
 	} else {
-		$message = 'Данные отправлены!';
+		$message = 'Дані надіслані!';
 	}
 
 	$response = ['message' => $message];

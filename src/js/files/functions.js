@@ -1,9 +1,9 @@
-// Подключение списка активных модулей
+// Підключення списку активних модулів
 import { flsModules } from "./modules.js";
 
-/* Проверка поддержки webp, добавление класса webp или no-webp для HTML */
+/* Перевірка підтримки webp, додавання класу webp або no-webp для HTML */
 export function isWebp() {
-	// Проверка поддержки webp
+	// Проверка поддержки webp 
 	function testWebP(callback) {
 		let webP = new Image();
 		webP.onload = webP.onerror = function () {
@@ -11,37 +11,39 @@ export function isWebp() {
 		};
 		webP.src = "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
 	}
-	// Добавление класса _webp или _no-webp для HTML
+	// Додавання класу _webp або _no-webp для HTML
 	testWebP(function (support) {
 		let className = support === true ? 'webp' : 'no-webp';
 		document.documentElement.classList.add(className);
 	});
 }
-/* Проверка мобильного браузера */
+/* Перевірка мобільного браузера */
 export let isMobile = { Android: function () { return navigator.userAgent.match(/Android/i); }, BlackBerry: function () { return navigator.userAgent.match(/BlackBerry/i); }, iOS: function () { return navigator.userAgent.match(/iPhone|iPad|iPod/i); }, Opera: function () { return navigator.userAgent.match(/Opera Mini/i); }, Windows: function () { return navigator.userAgent.match(/IEMobile/i); }, any: function () { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); } };
-/* Добавление класса touch для HTML если браузер мобильный */
+/* Додавання класу touch для HTML, якщо браузер мобільний */
 export function addTouchClass() {
-	// Добавление класса _touch для HTML если браузер мобильный
+	// Додавання класу _touch для HTML, якщо браузер мобільний
 	if (isMobile.any()) document.documentElement.classList.add('touch');
 }
-// Добавление loaded для HTML после полной загрузки страницы
+// Додавання loaded для HTML після повного завантаження сторінки
 export function addLoadedClass() {
-	window.addEventListener("load", function () {
-		setTimeout(function () {
-			document.documentElement.classList.add('loaded');
-		}, 0);
-	});
+	if (!document.documentElement.classList.contains('loading')) {
+		window.addEventListener("load", function () {
+			setTimeout(function () {
+				document.documentElement.classList.add('loaded');
+			}, 0);
+		});
+	}
 }
-// Получение хеша в адресе сайта
+// Отримання хешу на адресі сайту
 export function getHash() {
 	if (location.hash) { return location.hash.replace('#', ''); }
 }
-// Указание хеша в адресе сайта
+// Вказівка хеша на адресу сайту
 export function setHash(hash) {
 	hash = hash ? `#${hash}` : window.location.href.split('#')[0];
 	history.pushState('', '', hash);
 }
-// Учет плавающей панели на мобильных устройствах при 100vh
+// Облік плаваючої панелі на мобільних пристроях при 100vh
 export function fullVHfix() {
 	const fullScreens = document.querySelectorAll('[data-fullscreen]');
 	if (fullScreens.length && isMobile.any()) {
@@ -53,7 +55,7 @@ export function fullVHfix() {
 		fixHeight();
 	}
 }
-// Вспомогательные модули плавного расскрытия и закрытия объекта ======================================================================================================================================================================
+// Допоміжні модулі плавного розкриття та закриття об'єкта ======================================================================================================================================================================
 export let _slideUp = (target, duration = 500, showmore = 0) => {
 	if (!target.classList.contains('_slide')) {
 		target.classList.add('_slide');
@@ -78,7 +80,7 @@ export let _slideUp = (target, duration = 500, showmore = 0) => {
 			target.style.removeProperty('transition-duration');
 			target.style.removeProperty('transition-property');
 			target.classList.remove('_slide');
-			// Создаем событие 
+			// Створюємо подію 
 			document.dispatchEvent(new CustomEvent("slideUpDone", {
 				detail: {
 					target: target
@@ -113,7 +115,7 @@ export let _slideDown = (target, duration = 500, showmore = 0) => {
 			target.style.removeProperty('transition-duration');
 			target.style.removeProperty('transition-property');
 			target.classList.remove('_slide');
-			// Создаем событие 
+			// Створюємо подію
 			document.dispatchEvent(new CustomEvent("slideDownDone", {
 				detail: {
 					target: target
@@ -129,7 +131,7 @@ export let _slideToggle = (target, duration = 500) => {
 		return _slideUp(target, duration);
 	}
 }
-// Вспомогательные модули блокировки прокрутки и скочка ====================================================================================================================================================================================================================================================================================
+// Допоміжні модулі блокування прокручування та стрибка ====================================================================================================================================================================================================================================================================================
 export let bodyLockStatus = true;
 export let bodyLockToggle = (delay = 500) => {
 	if (document.documentElement.classList.contains('lock')) {
@@ -173,45 +175,30 @@ export let bodyLock = (delay = 500) => {
 		}, delay);
 	}
 }
-// Модуль работы со спойлерами =======================================================================================================================================================================================================================
-/*
-Для родителя слойлеров пишем атрибут data-spollers
-Для заголовков слойлеров пишем атрибут data-spoller
-Если нужно включать\выключать работу спойлеров на разных размерах экранов
-пишем параметры ширины и типа брейкпоинта.
-
-Например: 
-data-spollers="992,max" - спойлеры будут работать только на экранах меньше или равно 992px
-data-spollers="768,min" - спойлеры будут работать только на экранах больше или равно 768px
-
-data-spollers-speed - скорость открытия
-
-Если нужно что бы в блоке открывался болько один слойлер добавляем атрибут data-one-spoller
-
-*/
+// Модуль роботи зі спойлерами =======================================================================================================================================================================================================================
 export function spollers() {
 	const spollersArray = document.querySelectorAll('[data-spollers]');
 	if (spollersArray.length > 0) {
-		// Получение обычных слойлеров
+		// Отримання звичайних слойлерів
 		const spollersRegular = Array.from(spollersArray).filter(function (item, index, self) {
 			return !item.dataset.spollers.split(",")[0];
 		});
-		// Инициализация обычных слойлеров
+		// Ініціалізація звичайних слойлерів
 		if (spollersRegular.length) {
 			initSpollers(spollersRegular);
 		}
-		// Получение слойлеров с медиа запросами
+		// Отримання слойлерів з медіа-запитами
 		let mdQueriesArray = dataMediaQueries(spollersArray, "spollers");
 		if (mdQueriesArray && mdQueriesArray.length) {
 			mdQueriesArray.forEach(mdQueriesItem => {
-				// Событие
+				// Подія
 				mdQueriesItem.matchMedia.addEventListener("change", function () {
 					initSpollers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia);
 				});
 				initSpollers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia);
 			});
 		}
-		// Инициализация
+		// Ініціалізація
 		function initSpollers(spollersArray, matchMedia = false) {
 			spollersArray.forEach(spollersBlock => {
 				spollersBlock = matchMedia ? spollersBlock.item : spollersBlock;
@@ -226,7 +213,7 @@ export function spollers() {
 				}
 			});
 		}
-		// Работа с контентом
+		// Робота з контентом
 		function initSpollerBody(spollersBlock, hideSpollerBody = true) {
 			let spollerTitles = spollersBlock.querySelectorAll('[data-spoller]');
 			if (spollerTitles.length) {
@@ -269,6 +256,7 @@ export function spollers() {
 				_slideUp(spollerActiveTitle.nextElementSibling, spollerSpeed);
 			}
 		}
+		// Закриття при кліку поза спойлером
 		const spollersClose = document.querySelectorAll('[data-spoller-close]');
 		if (spollersClose.length) {
 			document.addEventListener("click", function (e) {
@@ -276,8 +264,8 @@ export function spollers() {
 				if (!el.closest('[data-spollers]')) {
 					spollersClose.forEach(spollerClose => {
 						const spollersBlock = spollerClose.closest('[data-spollers]');
-						const spollerSpeed = spollersBlock.dataset.spollersSpeed ? parseInt(spollersBlock.dataset.spollersSpeed) : 500;
-						if (!spollersBlock.querySelectorAll('._slide').length) {
+						if (spollersBlock.classList.contains('_spoller-init')) {
+							const spollerSpeed = spollersBlock.dataset.spollersSpeed ? parseInt(spollersBlock.dataset.spollersSpeed) : 500;
 							spollerClose.classList.remove('_spoller-active');
 							_slideUp(spollerClose.nextElementSibling, spollerSpeed);
 						}
@@ -287,21 +275,7 @@ export function spollers() {
 		}
 	}
 }
-// Модуь работы с табами =======================================================================================================================================================================================================================
-/*
-Для родителя табов пишем атрибут data-tabs
-Для родителя заголовков табов пишем атрибут data-tabs-titles
-Для родителя блоков табов пишем атрибут data-tabs-body
-Для родителя блоков табов можно указать data-tabs-hash, это втключит добавление хеша
-
-Если нужно чтобы табы открывались с анимацией 
-добавляем к data-tabs data-tabs-animate
-По умолчанию, скорость анимации 500ms, 
-указать свою скорость можно так: data-tabs-animate="1000"
-
-Если нужно чтобы табы превращались в "спойлеры", на неком размере экранов, пишем параметры ширины.
-Например: data-tabs="992" - табы будут превращаться в спойлеры на экранах меньше или равно 992px
-*/
+// Модуль роботи з табами =======================================================================================================================================================================================================================
 export function tabs() {
 	const tabs = document.querySelectorAll('[data-tabs]');
 	let tabsActiveHash = [];
@@ -318,11 +292,11 @@ export function tabs() {
 			initTabs(tabsBlock);
 		});
 
-		// Получение слойлеров с медиа запросами
+		// Отримання слойлерів з медіа-запитами
 		let mdQueriesArray = dataMediaQueries(tabs, "tabs");
 		if (mdQueriesArray && mdQueriesArray.length) {
 			mdQueriesArray.forEach(mdQueriesItem => {
-				// Событие
+				// Подія
 				mdQueriesItem.matchMedia.addEventListener("change", function () {
 					setTitlePosition(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia);
 				});
@@ -330,7 +304,7 @@ export function tabs() {
 			});
 		}
 	}
-	// Установка позиций заголовков
+	// Встановлення позицій заголовків
 	function setTitlePosition(tabsMediaArray, matchMedia) {
 		tabsMediaArray.forEach(tabsMediaItem => {
 			tabsMediaItem = tabsMediaItem.item;
@@ -352,7 +326,7 @@ export function tabs() {
 			});
 		});
 	}
-	// Работа с контентом
+	// Робота з контентом
 	function initTabs(tabsBlock) {
 		let tabsTitles = tabsBlock.querySelectorAll('[data-tabs-titles]>*');
 		let tabsContent = tabsBlock.querySelectorAll('[data-tabs-body]>*');
@@ -427,7 +401,7 @@ export function tabs() {
 		}
 	}
 }
-// Модуль работы с меню (бургер) =======================================================================================================================================================================================================================
+// Модуль роботи з меню (бургер) =======================================================================================================================================================================================================================
 export function menuInit() {
 	if (document.querySelector(".icon-menu")) {
 		document.addEventListener("click", function (e) {
@@ -446,36 +420,28 @@ export function menuClose() {
 	bodyUnlock();
 	document.documentElement.classList.remove("menu-open");
 }
-// Модуль "показать еще" =======================================================================================================================================================================================================================
-/*
-Документация по работе в шаблоне:
-data-showmore-media = "768,min"
-data-showmore="size/items"
-data-showmore-content="размер/кол-во"
-data-showmore-button="скорость"
-Сниппет (HTML): showmore
-*/
+// Модуль "показати ще" =======================================================================================================================================================================================================================
 export function showMore() {
 	window.addEventListener("load", function (e) {
 		const showMoreBlocks = document.querySelectorAll('[data-showmore]');
 		let showMoreBlocksRegular;
 		let mdQueriesArray;
 		if (showMoreBlocks.length) {
-			// Получение обычных объектов
+			// Отримання звичайних об'єктів
 			showMoreBlocksRegular = Array.from(showMoreBlocks).filter(function (item, index, self) {
 				return !item.dataset.showmoreMedia;
 			});
-			// Инициализация обычных объектов
+			// Ініціалізація звичайних об'єктів
 			showMoreBlocksRegular.length ? initItems(showMoreBlocksRegular) : null;
 
 			document.addEventListener("click", showMoreActions);
 			window.addEventListener("resize", showMoreActions);
 
-			// Получение объектов с медиа запросами
+			// Отримання об'єктів з медіа-запитами
 			mdQueriesArray = dataMediaQueries(showMoreBlocks, "showmoreMedia");
 			if (mdQueriesArray && mdQueriesArray.length) {
 				mdQueriesArray.forEach(mdQueriesItem => {
-					// Событие
+					// Подія
 					mdQueriesItem.matchMedia.addEventListener("change", function () {
 						initItems(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia);
 					});
@@ -565,10 +531,102 @@ export function showMore() {
 		}
 	});
 }
-//================================================================================================================================================================================================================================================================================================================
-// Прочие полезные функции ================================================================================================================================================================================================================================================================================================================
-//================================================================================================================================================================================================================================================================================================================
+// Модуль "Ripple effect" =======================================================================================================================================================================================================================
+export function rippleEffect() {
+	// Подія кліку на кнопці
+	document.addEventListener("click", function (e) {
+		const targetItem = e.target;
+		if (targetItem.closest('[data-ripple]')) {
+			// Константи
+			const button = targetItem.closest('[data-ripple]');
+			const ripple = document.createElement('span');
+			const diameter = Math.max(button.clientWidth, button.clientHeight);
+			const radius = diameter / 2;
 
+			// Формування елементу
+			ripple.style.width = ripple.style.height = `${diameter}px`;
+			ripple.style.left = `${e.pageX - (button.getBoundingClientRect().left + scrollX) - radius}px`;
+			ripple.style.top = `${e.pageY - (button.getBoundingClientRect().top + scrollY) - radius}px`;
+			ripple.classList.add('ripple');
+
+			// Видалення існуючого елементу (опціонально)
+			button.dataset.ripple === 'once' && button.querySelector('.ripple') ?
+				button.querySelector('.ripple').remove() : null;
+
+			// Додавання елементу
+			button.appendChild(ripple);
+
+			// Отримання часу дії анімації
+			const timeOut = getAnimationDuration(ripple);
+
+			// Видалення елементу
+			setTimeout(() => {
+				ripple ? ripple.remove() : null;
+			}, timeOut);
+
+			// Функтія отримання часу дії анімації
+			function getAnimationDuration() {
+				const aDuration = window.getComputedStyle(ripple).animationDuration;
+				return aDuration.includes('ms') ?
+					aDuration.replace("ms", '') : aDuration.replace("s", '') * 1000;
+			}
+		}
+	});
+}
+// Модуль "Сustom сursor" =======================================================================================================================================================================================================================
+export function customCursor(isShadowTrue) {
+	const wrapper = document.querySelector('[data-custom-cursor]') ? document.querySelector('[data-custom-cursor]') : document.documentElement;
+	if (wrapper && !isMobile.any()) {
+		// Створюємо та додаємо об'єкт курсору
+		const cursor = document.createElement('div');
+		cursor.classList.add('fls-cursor');
+		cursor.style.opacity = 0;
+		cursor.insertAdjacentHTML('beforeend', `<span class="fls-cursor__pointer"></span>`);
+		isShadowTrue ? cursor.insertAdjacentHTML('beforeend', `<span class="fls-cursor__shadow"></span>`) : null;
+		wrapper.append(cursor);
+
+		const cursorPointer = document.querySelector('.fls-cursor__pointer');
+		const cursorPointerStyle = {
+			width: cursorPointer.offsetWidth,
+			height: cursorPointer.offsetHeight
+		}
+		let cursorShadow, cursorShadowStyle;
+		if (isShadowTrue) {
+			cursorShadow = document.querySelector('.fls-cursor__shadow');
+			cursorShadowStyle = {
+				width: cursorShadow.offsetWidth,
+				height: cursorShadow.offsetHeight
+			}
+		}
+		function mouseActions(e) {
+			if (e.type === 'mouseout') {
+				cursor.style.opacity = 0;
+			} else if (e.type === 'mousemove') {
+				cursor.style.removeProperty('opacity');
+				if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input') || (window.getComputedStyle(e.target).cursor !== 'none' && window.getComputedStyle(e.target).cursor !== 'default')) {
+					cursor.classList.add('_hover');
+				} else {
+					cursor.classList.remove('_hover');
+				}
+			} else if (e.type === 'mousedown') {
+				cursor.classList.add('_active');
+
+			} else if (e.type === 'mouseup') {
+				cursor.classList.remove('_active');
+			}
+			cursorPointer ? cursorPointer.style.transform = `translate3d(${e.clientX - cursorPointerStyle.width / 2}px, ${e.clientY - cursorPointerStyle.height / 2}px, 0)` : null;
+			cursorShadow ? cursorShadow.style.transform = `translate3d(${e.clientX - cursorShadowStyle.width / 2}px, ${e.clientY - cursorShadowStyle.height / 2}px, 0)` : null;
+		}
+
+		window.addEventListener('mouseup', mouseActions);
+		window.addEventListener('mousedown', mouseActions);
+		window.addEventListener('mousemove', mouseActions);
+		window.addEventListener('mouseout', mouseActions);
+	}
+}
+//================================================================================================================================================================================================================================================================================================================
+// Інші корисні функції ================================================================================================================================================================================================================================================================================================================
+//================================================================================================================================================================================================================================================================================================================
 // FLS (Full Logging System)
 export function FLS(message) {
 	setTimeout(() => {
@@ -577,40 +635,44 @@ export function FLS(message) {
 		}
 	}, 0);
 }
-// Получить цифры из строки
+// Отримати цифри з рядка
 export function getDigFromString(item) {
 	return parseInt(item.replace(/[^\d]/g, ''))
 }
-// Форматирование цифр типа 100 000 000
+// Форматування цифр типу 100 000 000
 export function getDigFormat(item) {
 	return item.toString().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
 }
-// Убрать класс из всех элементов массива
+// Прибрати клас з усіх елементів масиву
 export function removeClasses(array, className) {
 	for (var i = 0; i < array.length; i++) {
 		array[i].classList.remove(className);
 	}
 }
-// Уникализация массива
+// Унікалізація масиву
 export function uniqArray(array) {
 	return array.filter(function (item, index, self) {
 		return self.indexOf(item) === index;
 	});
 }
-// Функция получения индекса внутри родителя
+// Функція отримання індексу всередині батьківського елемента
 export function indexInParent(parent, element) {
 	const array = Array.prototype.slice.call(parent.children);
 	return Array.prototype.indexOf.call(array, element);
 };
-// Обработа медиа запросов из атрибутов 
+// Функція перевіряє чи об'єкт видимий
+export function isHidden(el) {
+	return (el.offsetParent === null)
+}
+// Обробка медіа запитів з атрибутів
 export function dataMediaQueries(array, dataSetValue) {
-	// Получение объектов с медиа запросами
+	// Отримання об'єктів з медіа-запитами
 	const media = Array.from(array).filter(function (item, index, self) {
 		if (item.dataset[dataSetValue]) {
 			return item.dataset[dataSetValue].split(",")[0];
 		}
 	});
-	// Инициализация объектов с медиа запросами
+	// Ініціалізація об'єктів з медіа-запитами
 	if (media.length) {
 		const breakpointsArray = [];
 		media.forEach(item => {
@@ -622,7 +684,7 @@ export function dataMediaQueries(array, dataSetValue) {
 			breakpoint.item = item;
 			breakpointsArray.push(breakpoint);
 		});
-		// Получаем уникальные брейкпоинты
+		// Отримуємо унікальні брейкпоінти
 		let mdQueries = breakpointsArray.map(function (item) {
 			return '(' + item.type + "-width: " + item.value + "px)," + item.value + ',' + item.type;
 		});
@@ -630,13 +692,13 @@ export function dataMediaQueries(array, dataSetValue) {
 		const mdQueriesArray = [];
 
 		if (mdQueries.length) {
-			// Работаем с каждым брейкпоинтом
+			// Працюємо з кожним брейкпоінтом
 			mdQueries.forEach(breakpoint => {
 				const paramsArray = breakpoint.split(",");
 				const mediaBreakpoint = paramsArray[1];
 				const mediaType = paramsArray[2];
 				const matchMedia = window.matchMedia(paramsArray[0]);
-				// Объекты с нужными условиями
+				// Об'єкти з потрібними умовами
 				const itemsArray = breakpointsArray.filter(function (item) {
 					if (item.value === mediaBreakpoint && item.type === mediaType) {
 						return true;
@@ -651,4 +713,5 @@ export function dataMediaQueries(array, dataSetValue) {
 		}
 	}
 }
+
 //================================================================================================================================================================================================================================================================================================================

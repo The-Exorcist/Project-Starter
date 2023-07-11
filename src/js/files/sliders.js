@@ -1,37 +1,37 @@
 /*
-Документация по работе в шаблоне: 
-Документация слайдера: https://swiperjs.com/
-Сниппет(HTML): swiper
+Документація по роботі у шаблоні: 
+Документація слайдера: https://swiperjs.com/
+Сніппет(HTML): swiper
 */
 
-// Подключаем слайдер Swiper из node_modules
-// При необходимости подключаем дополнительные модули слайдера, указывая их в {} через запятую
-// Пример: { Navigation, Autoplay }
+// Підключаємо слайдер Swiper з node_modules
+// При необхідності підключаємо додаткові модулі слайдера, вказуючи їх у {} через кому
+// Приклад: { Navigation, Autoplay }
 import Swiper, { Navigation } from 'swiper';
 /*
-Основниые модули слайдера:
+Основні модулі слайдера:
 Navigation, Pagination, Autoplay, 
 EffectFade, Lazy, Manipulation
-Подробнее смотри https://swiperjs.com/
+Детальніше дивись https://swiperjs.com/
 */
 
-// Стили Swiper
-// Базовые стили
+// Стилі Swiper
+// Базові стилі
 import "../../scss/base/swiper.scss";
-// Полный набор стилей из scss/libs/swiper.scss
+// Повний набір стилів з scss/libs/swiper.scss
 // import "../../scss/libs/swiper.scss";
-// Полный набор стилей из node_modules
+// Повний набір стилів з node_modules
 // import 'swiper/css';
 
-// Инициализация слайдеров
+// Ініціалізація слайдерів
 function initSliders() {
-	// Перечень слайдеров
-	// Проверяем, есть ли слайдер на стронице
-	if (document.querySelector('.swiper')) { // Указываем скласс нужного слайдера
-		// Создаем слайдер
-		new Swiper('.swiper', { // Указываем скласс нужного слайдера
-			// Подключаем модули слайдера
-			// для конкретного случая
+	// Список слайдерів
+	// Перевіряємо, чи є слайдер на сторінці
+	if (document.querySelector('.swiper')) { // Вказуємо склас потрібного слайдера
+		// Створюємо слайдер
+		new Swiper('.swiper', { // Вказуємо склас потрібного слайдера
+			// Підключаємо модулі слайдера
+			// для конкретного випадку
 			modules: [Navigation],
 			observer: true,
 			observeParents: true,
@@ -47,7 +47,7 @@ function initSliders() {
 			//lazy: true,
 
 			/*
-			// Эффекты
+			// Ефекти
 			effect: 'fade',
 			autoplay: {
 				delay: 3000,
@@ -55,7 +55,7 @@ function initSliders() {
 			},
 			*/
 
-			// Пагинация
+			// Пагінація
 			/*
 			pagination: {
 				el: '.swiper-pagination',
@@ -71,16 +71,15 @@ function initSliders() {
 			},
 			*/
 
-			// Кнопки "влево/вправо"
+			// Кнопки "вліво/вправо"
 			navigation: {
 				prevEl: '.swiper-button-prev',
 				nextEl: '.swiper-button-next',
 			},
-
-			// Брейкпоинты
 			/*
+			// Брейкпоінти
 			breakpoints: {
-				320: {
+				640: {
 					slidesPerView: 1,
 					spaceBetween: 0,
 					autoHeight: true,
@@ -99,19 +98,15 @@ function initSliders() {
 				},
 			},
 			*/
-			// События
+			// Події
 			on: {
 
 			}
 		});
 	}
 }
-// Скролл на базе слайдера (по классу swiper_scroll для оболочки слайдера)
+// Скролл на базі слайдера (за класом swiper scroll для оболонки слайдера)
 function initSlidersScroll() {
-	// Добавление классов слайдера
-	// при необходимости отключить
-	bildSliders();
-
 	let sliderScrollItems = document.querySelectorAll('.swiper_scroll');
 	if (sliderScrollItems.length > 0) {
 		for (let index = 0; index < sliderScrollItems.length; index++) {
@@ -140,8 +135,8 @@ function initSlidersScroll() {
 }
 
 window.addEventListener("load", function (e) {
-	// Запуск инициализации слайдеров
+	// Запуск ініціалізації слайдерів
 	initSliders();
-	// Запуск инициализации скролла на базе слайдера (по классу swiper_scroll)
+	// Запуск ініціалізації скролла на базі слайдера (за класом swiper_scroll)
 	//initSlidersScroll();
 });
