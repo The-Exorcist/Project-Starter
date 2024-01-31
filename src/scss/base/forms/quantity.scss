@@ -31,13 +31,13 @@
 			}
 		}
 		// .quantity__button_plus
-		&_plus {
+		&--plus {
 			&::before {
 				transform: rotate(-90deg);
 			}
 		}
 		// .quantity__button_minus
-		&_minus {
+		&--minus {
 		}
 	}
 	// .quantity__input

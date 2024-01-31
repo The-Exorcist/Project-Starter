@@ -1,5 +1,5 @@
 // Підключення функціоналу "Чертоги Фрілансера"
-import { isMobile, getHash, menuClose } from "../functions.js";
+import { isMobile, getHash, menuClose, getDigFormat } from "../functions.js";
 import { flsModules } from "../../files/modules.js";
 // Модуль прокручування до блоку
 import { gotoBlock } from "./gotoblock.js";
@@ -116,19 +116,15 @@ export function headerScroll() {
 }
 // Модуль анімація цифрового лічильника
 export function digitsCounter() {
-	// Обнулення
-	if (document.querySelectorAll("[data-digits-counter]").length) {
-		document.querySelectorAll("[data-digits-counter]").forEach(element => {
-			element.dataset.digitsCounter = element.innerHTML;
-			element.innerHTML = `0`;
-		});
-	}
-
 	// Функція ініціалізації
 	function digitsCountersInit(digitsCountersItems) {
 		let digitsCounters = digitsCountersItems ? digitsCountersItems : document.querySelectorAll("[data-digits-counter]");
 		if (digitsCounters.length) {
 			digitsCounters.forEach(digitsCounter => {
+				// Обнулення
+				digitsCounter.dataset.digitsCounter = digitsCounter.innerHTML;
+				digitsCounter.innerHTML = `0`;
+				// Анімація
 				digitsCountersAnimate(digitsCounter);
 			});
 		}
@@ -136,13 +132,15 @@ export function digitsCounter() {
 	// Функція анімації
 	function digitsCountersAnimate(digitsCounter) {
 		let startTimestamp = null;
-		const duration = parseInt(digitsCounter.dataset.digitsCounterSpeed) ? parseInt(digitsCounter.dataset.digitsCounterSpeed) : 1000;
-		const startValue = parseInt(digitsCounter.dataset.digitsCounter);
+		const duration = parseFloat(digitsCounter.dataset.digitsCounterSpeed) ? parseFloat(digitsCounter.dataset.digitsCounterSpeed) : 1000;
+		const startValue = parseFloat(digitsCounter.dataset.digitsCounter);
+		const format = digitsCounter.dataset.digitsCounterFormat ? digitsCounter.dataset.digitsCounterFormat : ' ';
 		const startPosition = 0;
 		const step = (timestamp) => {
 			if (!startTimestamp) startTimestamp = timestamp;
 			const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-			digitsCounter.innerHTML = Math.floor(progress * (startPosition + startValue));
+			const value = Math.floor(progress * (startPosition + startValue));
+			digitsCounter.innerHTML = typeof digitsCounter.dataset.digitsCounterFormat !== 'undefined' ? getDigFormat(value, format) : value;
 			if (progress < 1) {
 				window.requestAnimationFrame(step);
 			}

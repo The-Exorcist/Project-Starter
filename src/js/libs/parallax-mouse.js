@@ -43,7 +43,7 @@ class MousePRLX {
 				this.paralaxMouseInit(paralaxMouse);
 				this.setLogging(`Прокинувся, стежу за об'єктами: (${paralaxMouse.length})`);
 			} else {
-				this.setLogging('Немає жодного обєкта. Сплю...zzZZZzZZz...');
+				this.setLogging('Немає жодного обєкта. Сплю...');
 			}
 		}
 	}
@@ -81,7 +81,7 @@ class MousePRLX {
 				const distY = coordYprocent - positionY;
 				positionX = positionX + (distX * paramAnimation / 1000);
 				positionY = positionY + (distY * paramAnimation / 1000);
-				el.style.cssText = `transform: translate3D(${directionX * positionX / (paramСoefficientX / 10)}%,${directionY * positionY / (paramСoefficientY / 10)}%,0);`;
+				el.style.cssText = `transform: translate3D(${directionX * positionX / (paramСoefficientX / 10)}%,${directionY * positionY / (paramСoefficientY / 10)}%,0) rotate(0.02deg);`;
 				requestAnimationFrame(setMouseParallaxStyle);
 			}
 			function mouseMoveParalax(wrapper = window) {

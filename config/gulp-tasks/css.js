@@ -44,7 +44,13 @@ export const css = () => {
 		.pipe(
 			app.plugins.if(
 				app.isBuild,
-				cleanCss()
+				cleanCss({
+					level: {
+						1: {
+							tidySelectors: false
+						}
+					}
+				})
 			)
 		)
 		.pipe(app.plugins.rename({ suffix: ".min" }))
