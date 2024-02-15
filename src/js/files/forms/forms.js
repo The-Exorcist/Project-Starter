@@ -8,6 +8,10 @@ import { gotoBlock } from "../scroll/gotoblock.js";
 //================================================================================================================================================================================================================================================================================================================================
 
 /*
+Документация: https://template.fls.guru/template-docs/rabota-s-formami.html
+*/
+
+/*
 Чтобы поле участвовало в валидации добавляем атрибут data-required
 Особые проверки:
 data-required="email" - вадидация E-mail
@@ -23,48 +27,31 @@ data-dev - режим разработчика - эмитируем отправ
 data-goto-error - прокрутить страницу к ошибке
 */
 
-// Работа с полями формы. Добавление классов, работа с placeholder
-export function formFieldsInit(options = { viewPass: false }) {
-	// Если включено, добавляем функционал "скрыть плейсходлер при фокусе"
-	const formFields = document.querySelectorAll('input[placeholder],textarea[placeholder]');
-	if (formFields.length) {
-		formFields.forEach(formField => {
-			if (!formField.hasAttribute('data-placeholder-nohide')) {
-				formField.dataset.placeholder = formField.placeholder;
-			}
-		});
-	}
+// Работа с полями формы.
+export function formFieldsInit(options = { viewPass: false, autoHeight: false }) {
 	document.body.addEventListener("focusin", function (e) {
 		const targetElement = e.target;
 		if ((targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA')) {
-			if (targetElement.dataset.placeholder) {
-				targetElement.placeholder = '';
-			}
 			if (!targetElement.hasAttribute('data-no-focus-classes')) {
 				targetElement.classList.add('_form-focus');
 				targetElement.parentElement.classList.add('_form-focus');
 			}
 			formValidate.removeError(targetElement);
+			targetElement.hasAttribute('data-validate') ? formValidate.removeError(targetElement) : null;
 		}
 	});
 	document.body.addEventListener("focusout", function (e) {
 		const targetElement = e.target;
 		if ((targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA')) {
-			if (targetElement.dataset.placeholder) {
-				targetElement.placeholder = targetElement.dataset.placeholder;
-			}
 			if (!targetElement.hasAttribute('data-no-focus-classes')) {
 				targetElement.classList.remove('_form-focus');
 				targetElement.parentElement.classList.remove('_form-focus');
 			}
-			// Моментальная валидация
-			if (targetElement.hasAttribute('data-validate')) {
-				formValidate.validateInput(targetElement);
-			}
+			// Мгновенная валидация
+			targetElement.hasAttribute('data-validate') ? formValidate.validateInput(targetElement) : null;
 		}
 	});
-
-	// Если включено, добавляем функционал "Показать пароль"
+	// Если включен, добавляем функционал "Показать пароль"
 	if (options.viewPass) {
 		document.addEventListener("click", function (e) {
 			let targetElement = e.target;
@@ -74,6 +61,28 @@ export function formFieldsInit(options = { viewPass: false }) {
 				targetElement.classList.toggle('_viewpass-active');
 			}
 		});
+	}
+	// Если включено, добавляем функционал "Автовысота"
+	if (options.autoHeight) {
+		const textareas = document.querySelectorAll('textarea[data-autoheight]');
+		if (textareas.length) {
+			textareas.forEach(textarea => {
+				const startHeight = textarea.hasAttribute('data-autoheight-min') ?
+					Number(textarea.dataset.autoheightMin) : Number(textarea.offsetHeight);
+				const maxHeight = textarea.hasAttribute('data-autoheight-max') ?
+					Number(textarea.dataset.autoheightMax) : Infinity;
+				setHeight(textarea, Math.min(startHeight, maxHeight))
+				textarea.addEventListener('input', () => {
+					if (textarea.scrollHeight > startHeight) {
+						textarea.style.height = `auto`;
+						setHeight(textarea, Math.min(Math.max(textarea.scrollHeight, startHeight), maxHeight));
+					}
+				});
+			});
+			function setHeight(textarea, height) {
+				textarea.style.height = `${height}px`;
+			}
+		}
 	}
 }
 // Валидация форм
@@ -104,7 +113,7 @@ export let formValidate = {
 			this.addError(formRequiredItem);
 			error++;
 		} else {
-			if (!formRequiredItem.value) {
+			if (!formRequiredItem.value.trim()) {
 				this.addError(formRequiredItem);
 				error++;
 			} else {
@@ -162,7 +171,7 @@ export let formValidate = {
 	}
 }
 /* Отправка форм */
-export function formSubmit(options = { validate: true }) {
+export function formSubmit() {
 	const forms = document.forms;
 	if (forms.length) {
 		for (const form of forms) {
@@ -194,7 +203,7 @@ export function formSubmit(options = { validate: true }) {
 				if (response.ok) {
 					let responseResult = await response.json();
 					form.classList.remove('_sending');
-					formSent(form);
+					formSent(form, responseResult);
 				} else {
 					alert("Ошибка");
 					form.classList.remove('_sending');
@@ -205,14 +214,14 @@ export function formSubmit(options = { validate: true }) {
 			}
 		} else {
 			e.preventDefault();
-			const formError = form.querySelector('._form-error');
-			if (formError && form.hasAttribute('data-goto-error')) {
-				gotoBlock(formError, true, 1000);
+			if (form.querySelector('._form-error') && form.hasAttribute('data-goto-error')) {
+				const formGoToErrorClass = form.dataset.gotoError ? form.dataset.gotoError : '._form-error';
+				gotoBlock(formGoToErrorClass, true, 1000);
 			}
 		}
 	}
 	// Действия после отправки формы
-	function formSent(form) {
+	function formSent(form, responseResult = ``) {
 		// Создаем событие отправки формы
 		document.dispatchEvent(new CustomEvent("formSent", {
 			detail: {
@@ -240,15 +249,25 @@ export function formSubmit(options = { validate: true }) {
 export function formQuantity() {
 	document.addEventListener("click", function (e) {
 		let targetElement = e.target;
-		if (targetElement.closest('.quantity__button')) {
-			let value = parseInt(targetElement.closest('.quantity').querySelector('input').value);
-			if (targetElement.classList.contains('quantity__button_plus')) {
+		if (targetElement.closest('[data-quantity-plus]') || targetElement.closest('[data-quantity-minus]')) {
+			const valueElement = targetElement.closest('[data-quantity]').querySelector('[data-quantity-value]');
+			let value = parseInt(valueElement.value);
+			if (targetElement.hasAttribute('data-quantity-plus')) {
 				value++;
+				if (+valueElement.dataset.quantityMax && +valueElement.dataset.quantityMax < value) {
+					value = valueElement.dataset.quantityMax;
+				}
 			} else {
 				--value;
-				if (value < 1) value = 1;
+				if (+valueElement.dataset.quantityMin) {
+					if (+valueElement.dataset.quantityMin > value) {
+						value = valueElement.dataset.quantityMin;
+					}
+				} else if (value < 1) {
+					value = 1;
+				}
 			}
-			targetElement.closest('.quantity').querySelector('input').value = value;
+			targetElement.closest('[data-quantity]').querySelector('[data-quantity-value]').value = value;
 		}
 	});
 }

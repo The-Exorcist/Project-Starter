@@ -12,7 +12,7 @@ import { flsModules } from "../files/modules.js";
 // =========
 Если нужны дополнительные настройки - указать 
 
-Атрибут											Значение по умолчанию
+Атрибут											Значення за замовчуванням
 -------------------------------------------------------------------------------------------------------------------
 data-prlx-cx="коэффициент_х"					100							значение больше - меньше процент сдвига
 data-prlx-cy="коэффициент_y"					100							значение больше - меньше процент сдвига
@@ -43,7 +43,7 @@ class MousePRLX {
 				this.paralaxMouseInit(paralaxMouse);
 				this.setLogging(`Проснулся, слежу за объектами: (${paralaxMouse.length})`);
 			} else {
-				this.setLogging('Нет ни одного объекта. Сплю...zzZZZzZZz...');
+				this.setLogging('Нет ни одного объекта. Сплю...');
 			}
 		}
 	}
@@ -51,9 +51,9 @@ class MousePRLX {
 		paralaxMouse.forEach(el => {
 			const paralaxMouseWrapper = el.closest('[data-prlx-mouse-wrapper]');
 
-			// Коэф. X 
+			// Коеф. X 
 			const paramСoefficientX = el.dataset.prlxCx ? +el.dataset.prlxCx : 100;
-			// Коэф. У 
+			// Коеф. У 
 			const paramСoefficientY = el.dataset.prlxCy ? +el.dataset.prlxCy : 100;
 			// Напр. Х
 			const directionX = el.hasAttribute('data-prlx-dxr') ? -1 : 1;
@@ -81,7 +81,7 @@ class MousePRLX {
 				const distY = coordYprocent - positionY;
 				positionX = positionX + (distX * paramAnimation / 1000);
 				positionY = positionY + (distY * paramAnimation / 1000);
-				el.style.cssText = `transform: translate3D(${directionX * positionX / (paramСoefficientX / 10)}%,${directionY * positionY / (paramСoefficientY / 10)}%,0);`;
+				el.style.cssText = `transform: translate3D(${directionX * positionX / (paramСoefficientX / 10)}%,${directionY * positionY / (paramСoefficientY / 10)}%,0) rotate(0.02deg);`;
 				requestAnimationFrame(setMouseParallaxStyle);
 			}
 			function mouseMoveParalax(wrapper = window) {
@@ -109,4 +109,6 @@ class MousePRLX {
 }
 // Запускаем и добавляем в объект модулей
 flsModules.mousePrlx = new MousePRLX({});
+
+
 

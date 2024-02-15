@@ -2,7 +2,7 @@
 import { isMobile, uniqArray, FLS } from "../files/functions.js";
 import { flsModules } from "../files/modules.js";
 
-// Наблюдатель объектов [всевидещее око]
+// Наблюдатель объектов [всевидящее око]
 // data-watch - можно писать значение для применения кастомного кода
 // data-watch-root - родитель внутри которого налюдать за объектом
 // data-watch-margin - отступ
@@ -64,7 +64,7 @@ class ScrollWatcher {
 				this.scrollWatcherInit(groupItems, configWatcher);
 			});
 		} else {
-			this.scrollWatcherLogging('Сплю, нет объектов для слежения. ZzzZZzz');
+			this.scrollWatcherLogging("Сплю, нет объектов для слежки.");
 		}
 	}
 	// Функция создания настроек
@@ -80,7 +80,7 @@ class ScrollWatcher {
 		// Отступ срабатывания
 		configWatcher.rootMargin = paramsWatch.margin;
 		if (paramsWatch.margin.indexOf('px') < 0 && paramsWatch.margin.indexOf('%') < 0) {
-			this.scrollWatcherLogging(`Ой ой, настройку data-watch-margin нужно задавать в PX или %`);
+			this.scrollWatcherLogging(`Настройку data-watch-margin нужно задавать в PX или %`);
 			return
 		}
 		// Точки срабатывания
@@ -118,7 +118,7 @@ class ScrollWatcher {
 			// Видим объект
 			// Добавляем класс
 			!targetElement.classList.contains('_watcher-view') ? targetElement.classList.add('_watcher-view') : null;
-			this.scrollWatcherLogging(`Я вижу ${targetElement.classList}, добавил класс _watcher-view`);
+			this.scrollWatcherLogging(`Я вижу ${targetElement.classList} добавил класс _watcher-view`);
 		} else {
 			// Не видим объект
 			// Убираем класс

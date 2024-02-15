@@ -1,9 +1,11 @@
 // Подключение функционала "Чертогов Фрилансера"
-import { isMobile, getHash } from "../functions.js";
+import { isMobile, getHash, menuClose, getDigFormat } from "../functions.js";
+import { flsModules } from "../../files/modules.js";
 // Модуль прокрутки к блоку
 import { gotoBlock } from "./gotoblock.js";
 // Переменная контроля добавления события window scroll.
 let addWindowScrollEvent = false;
+
 //====================================================================================================================================================================================================================================================================================================
 // Плавная навигация по странице
 export function pageNavigation() {
@@ -25,7 +27,16 @@ export function pageNavigation() {
 				const noHeader = gotoLink.hasAttribute('data-goto-header') ? true : false;
 				const gotoSpeed = gotoLink.dataset.gotoSpeed ? gotoLink.dataset.gotoSpeed : 500;
 				const offsetTop = gotoLink.dataset.gotoTop ? parseInt(gotoLink.dataset.gotoTop) : 0;
-				gotoBlock(gotoLinkSelector, noHeader, gotoSpeed, offsetTop);
+				if (flsModules.fullpage) {
+					const fullpageSection = document.querySelector(`${gotoLinkSelector}`).closest('[data-fp-section]');
+					const fullpageSectionId = fullpageSection ? +fullpageSection.dataset.fpId : null;
+					if (fullpageSectionId !== null) {
+						flsModules.fullpage.switchingSection(fullpageSectionId);
+						document.documentElement.classList.contains("menu-open") ? menuClose() : null;
+					}
+				} else {
+					gotoBlock(gotoLinkSelector, noHeader, gotoSpeed, offsetTop);
+				}
 				e.preventDefault();
 			}
 		} else if (e.type === "watcherCallback" && e.detail) {
@@ -103,70 +114,48 @@ export function headerScroll() {
 		scrollDirection = scrollTop <= 0 ? 0 : scrollTop;
 	});
 }
-// Прилипающий блок
-export function stickyBlock() {
-	addWindowScrollEvent = true;
-	// data-sticky для родителя внутри которого прилипает блок *
-	// data-sticky-header для родителя, учитываем высоту хедера
-	// data-sticky-top="" для родителя, можно указать отступ сверху
-	// data-sticky-bottom="" для родителя, можно указать отступ снизу
-	// data-sticky-item для прилипающего блока *
-	function stickyBlockInit() {
-		const stickyParents = document.querySelectorAll('[data-sticky]');
-		if (stickyParents.length) {
-			stickyParents.forEach(stickyParent => {
-				let stickyConfig = {
-					media: stickyParent.dataset.sticky ? parseInt(stickyParent.dataset.sticky) : null,
-					top: stickyParent.dataset.stickyTop ? parseInt(stickyParent.dataset.stickyTop) : 0,
-					bottom: stickyParent.dataset.stickyBottom ? parseInt(stickyParent.dataset.stickyBottom) : 0,
-					header: stickyParent.hasAttribute('data-sticky-header') ? document.querySelector('header.header').offsetHeight : 0
-				}
-				stickyBlockItem(stickyParent, stickyConfig);
+// Модуль анимации цифрового счетчика
+export function digitsCounter() {
+	// Функция инициализации
+	function digitsCountersInit(digitsCountersItems) {
+		let digitsCounters = digitsCountersItems ? digitsCountersItems : document.querySelectorAll("[data-digits-counter]");
+		if (digitsCounters.length) {
+			digitsCounters.forEach(digitsCounter => {
+				// Обнуление
+				digitsCounter.dataset.digitsCounter = digitsCounter.innerHTML;
+				digitsCounter.innerHTML = `0`;
+				// Анимация
+				digitsCountersAnimate(digitsCounter);
 			});
 		}
 	}
-	function stickyBlockItem(stickyParent, stickyConfig) {
-		const stickyBlockItem = stickyParent.querySelector('[data-sticky-item]');
-		const headerHeight = stickyConfig.header;
-		const offsetTop = headerHeight + stickyConfig.top;
-		const startPoint = stickyBlockItem.getBoundingClientRect().top + scrollY - offsetTop;
-
-		document.addEventListener("windowScroll", stickyBlockActions);
-		//window.addEventListener("resize", stickyBlockActions);
-
-		function stickyBlockActions(e) {
-			const endPoint = (stickyParent.offsetHeight + stickyParent.getBoundingClientRect().top + scrollY) - (offsetTop + stickyBlockItem.offsetHeight + stickyConfig.bottom);
-			let stickyItemValues = {
-				position: "relative",
-				bottom: "auto",
-				top: "0px",
-				left: "0px",
-				width: "auto"
+	// Функция анимации
+	function digitsCountersAnimate(digitsCounter) {
+		let startTimestamp = null;
+		const duration = parseFloat(digitsCounter.dataset.digitsCounterSpeed) ? parseFloat(digitsCounter.dataset.digitsCounterSpeed) : 1000;
+		const startValue = parseFloat(digitsCounter.dataset.digitsCounter);
+		const format = digitsCounter.dataset.digitsCounterFormat ? digitsCounter.dataset.digitsCounterFormat : ' ';
+		const startPosition = 0;
+		const step = (timestamp) => {
+			if (!startTimestamp) startTimestamp = timestamp;
+			const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+			const value = Math.floor(progress * (startPosition + startValue));
+			digitsCounter.innerHTML = typeof digitsCounter.dataset.digitsCounterFormat !== 'undefined' ? getDigFormat(value, format) : value;
+			if (progress < 1) {
+				window.requestAnimationFrame(step);
 			}
-			if (!stickyConfig.media || stickyConfig.media < window.innerWidth) {
-				if (offsetTop + stickyConfig.bottom + stickyBlockItem.offsetHeight < window.innerHeight) {
-					if (scrollY >= startPoint && scrollY <= endPoint) {
-						stickyItemValues.position = `fixed`;
-						stickyItemValues.bottom = `auto`;
-						stickyItemValues.top = `${offsetTop}px`;
-						stickyItemValues.left = `${stickyBlockItem.getBoundingClientRect().left}px`; // Учесть разницу в ширине экрана?
-						stickyItemValues.width = `${stickyBlockItem.offsetWidth}px`;
-					} else if (scrollY >= endPoint) {
-						stickyItemValues.position = `absolute`;
-						stickyItemValues.bottom = `${stickyConfig.bottom}px`;
-						stickyItemValues.top = `auto`;
-						stickyItemValues.left = `0px`;
-						stickyItemValues.width = `${stickyBlockItem.offsetWidth}px`;
-					}
-				}
-			}
-			stickyBlockType(stickyBlockItem, stickyItemValues);
+		};
+		window.requestAnimationFrame(step);
+	}
+	function digitsCounterAction(e) {
+		const entry = e.detail.entry;
+		const targetElement = entry.target;
+		if (targetElement.querySelectorAll("[data-digits-counter]").length) {
+			digitsCountersInit(targetElement.querySelectorAll("[data-digits-counter]"));
 		}
 	}
-	function stickyBlockType(stickyBlockItem, stickyItemValues) {
-		stickyBlockItem.style.cssText = `position:${stickyItemValues.position};bottom:${stickyItemValues.bottom};top:${stickyItemValues.top};left:${stickyItemValues.left};width:${stickyItemValues.width};`;
-	}
-	stickyBlockInit();
+
+	document.addEventListener("watcherCallback", digitsCounterAction);
 }
 // При подключении модуля обработчик события запустится автоматически
 setTimeout(() => {
@@ -177,3 +166,4 @@ setTimeout(() => {
 		});
 	}
 }, 0);
+

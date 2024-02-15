@@ -3,27 +3,28 @@
 	@font-face {
 		font-family: $font_name;
 		font-display: swap;
-		src: url("../fonts/#{$file_name}.woff2") format("woff2"), url("../fonts/#{$file_name}.woff") format("woff");
+		src:
+			url("../fonts/#{$file_name}.woff2") format("woff2"),
+			url("../fonts/#{$file_name}.woff") format("woff");
 		font-weight: #{$weight};
 		font-style: #{$style};
 	}
 }
 //Percent
-@function percent($px, $from) {
+@function percent($px, $from: 100) {
 	$result: math.div($px, $from) * 100%;
 	@return $result;
 }
 //REM
-@function rem($px) {
-	$result: math.div($px, 16) + rem;
+@function toRem($px, $current: 16) {
+	$result: math.div($px, $current) + rem;
 	@return $result;
 }
 //EM
-@function em($px, $current: 16) {
+@function toEm($px, $current: 16) {
 	$result: math.div($px, $current) + em;
 	@return $result;
 }
-//Адаптивное свойство
 
 //Currency
 @mixin currency($sym) {
@@ -40,42 +41,48 @@
 }
 
 // Адаптивное свойство (clamp)
-@mixin adaptiveValue($property, $startSize, $minSize, $widthFrom: $containerWidth, $widthTo: $minWidth, $keepSize: 0) {
+@mixin adaptiveValue($property, $startSize, $minSize, $keepSize: 0, $widthFrom: $containerWidth, $widthTo: $minWidth) {
+	@if ($startSize==0) {
+		$startSize: 0.000001;
+	}
+	@if ($minSize==0) {
+		$minSize: 0.000001;
+	}
+
 	// Для calc();
 	$addSize: math.div($startSize - $minSize, 16);
 
 	@if ($widthFrom == $containerWidth and $maxWidthContainer == 0) {
 		$widthFrom: $maxWidth;
 	}
-	@if ($minSize <= 0) {
-		$minSize: 0.0001;
-	}
-	@if ($startSize <= 0) {
-		$startSize: 0.0001;
-	}
 
 	// Брейк-поинты в EM
-	$widthFromMedia: em($widthFrom);
-	$widthToMedia: em($widthTo);
+	$widthFromMedia: toEm($widthFrom);
+	$widthToMedia: toEm($widthTo);
 
 	// Формула плавающего значения
 	// Источник: https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/
 	$slope: math.div(($startSize - $minSize), ($widthFrom - $widthTo));
 	$yIntersection: -$widthTo * $slope + $minSize;
-	$flyValue: #{rem($yIntersection)}" + " #{$slope * 100}vw;
+	@if ($yIntersection==0) {
+		$yIntersection: 0.000001;
+	}
+	$flyValue: #{toRem($yIntersection)}" + " #{$slope * 100}vw;
 
 	// Получение значения свойства
-	$propertyValue: #{"clamp(" rem($minSize) "," $flyValue "," rem($startSize) ")"};
+	$propertyValue: #{"clamp(" toRem($minSize) "," $flyValue "," toRem($startSize) ")"};
 	// Если отрицательные значения
 	@if ($minSize > $startSize) {
-		$propertyValue: #{"clamp(" rem($startSize) "," $flyValue "," rem($minSize) ")"};
+		$propertyValue: #{"clamp(" toRem($startSize) "," $flyValue "," toRem($minSize) ")"};
 	}
 
-	@if $widthFrom == $containerWidth or $widthFrom == $maxWidth or $keepSize == 1 or $keepSize == 2 {
+	// Устанавливаем значение по умолчанию
+	@if $keepSize != 1 and $keepSize != 3 {
 		@media (min-width: $widthFromMedia) {
-			#{$property}: rem($startSize);
+			#{$property}: toRem($startSize);
 		}
 	}
+	// Адаптируем размер в промежутке между указанными ширинами вьюпорта
 	@media (min-width: $widthToMedia) and (max-width: $widthFromMedia) {
 		// Если поддерживается clamp();
 		@supports (#{$property}: $propertyValue) {
@@ -83,12 +90,12 @@
 		}
 		// Если не поддерживается clamp();
 		@supports not (#{$property}: $propertyValue) {
-			#{$property}: calc(#{rem($minSize)} + #{$addSize} * (100vw - #{rem($widthTo)}) / #{math.div($widthFrom, 16) - math.div($widthTo, 16)});
+			#{$property}: calc(#{toRem($minSize)} + #{$addSize} * (100vw - #{toRem($widthTo)}) / #{math.div($widthFrom, 16) - math.div($widthTo, 16)});
 		}
 	}
-	@if $widthTo == $minWidth or $keepSize == 1 or $keepSize == 3 {
+	@if $keepSize != 1 and $keepSize != 2 {
 		@media (max-width: $widthToMedia) {
-			#{$property}: rem($minSize);
+			#{$property}: toRem($minSize);
 		}
 	}
 }

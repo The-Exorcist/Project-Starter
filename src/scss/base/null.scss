@@ -4,9 +4,13 @@
 	border: 0px;
 }
 *,
-*:before,
-*:after {
+*::before,
+*::after {
 	box-sizing: border-box;
+}
+*::before,
+*::after {
+	display: inline-block;
 }
 :focus,
 :active {
@@ -38,20 +42,24 @@ button,
 textarea {
 	font-family: $fontFamily;
 	font-size: inherit;
-}
-button {
-	cursor: pointer;
+	line-height: inherit;
 	color: inherit;
-	background-color: inherit;
+	background-color: transparent;
+}
+
+input,
+textarea {
+	width: 100%;
+}
+
+button,
+select,
+option {
+	cursor: pointer;
 }
 a {
+	display: inline-block;
 	color: inherit;
-}
-a:link,
-a:visited {
-	text-decoration: none;
-}
-a:hover {
 	text-decoration: none;
 }
 ul li {

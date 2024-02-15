@@ -18,9 +18,23 @@
 		"scope": "html",
 		"prefix": "spollers",
 		"body": [
-			"<div data-spollers class=\"spollers\">\n\t<div class=\"spollers__item\">\n\t\t<button type=\"button\" data-spoller class=\"spollers__title\">Заголовок спойлера</button>\n\t\t<div class=\"spollers__body\">Контент спойлера</div>\n\t</div>\n</div>"
+			"<div data-spollers class=\"spollers\">\n\t<details class=\"spollers__item\">\n\t\t<summary class=\"spollers__title\">Заголовок спойлера</summary>\n\t\t<div class=\"spollers__body\">Контент спойлера</div>\n\t</details>\n</div>"
 		],
 		"description": "Добавляет базовый HTML код спойлеров"
+	},
+	"BeforeAfter": {
+		"scope": "html",
+		"prefix": "ba",
+		"body": [
+			"<div data-ba class=\"${1:before-after}\">",
+			"\t<div data-ba-before class=\"${1:before-after}__item\">",
+			"\t</div>",
+			"\t<div data-ba-after class=\"${1:before-after}__item\">",
+			"\t</div>",
+			"\t<div data-ba-arrow class=\"${1:before-after}__arrow\"></div>",
+			"</div>"
+		],
+		"description": "Before After module"
 	},
 	"Tabs": {
 		"scope": "html",
@@ -34,7 +48,7 @@
 		"scope": "html",
 		"prefix": "showmore",
 		"body": [
-			"<div data-showmore class=\"${1:block}\">\n\t<div data-showmore-content class=\"${1:block}__content\"></div>\n\t<button hidden data-showmore-button type=\"button\" class=\"${1:block}__more\"><span>Показать еще</span><span>Скыть</span></button>\n</div>"
+			"<div data-showmore class=\"${1:block}\">\n\t<div data-showmore-content class=\"${1:block}__content\"></div>\n\t<button hidden data-showmore-button type=\"button\" class=\"${1:block}__more\"><span>Показати ще</span><span>Сховати</span></button>\n</div>"
 		],
 		"description": "Добавляет базовый HTML код блока 'показать еще'"
 	},
@@ -57,8 +71,14 @@
 	"Quantity": {
 		"scope": "html",
 		"prefix": "quantity",
-		"body": "<div class=\"quantity\">\n\t<button type=\"button\" class=\"quantity__button quantity__button_plus\"></button>\n\t<div class=\"quantity__input\">\n\t\t<input autocomplete=\"off\" type=\"text\" name=\"form[]\" value=\"1\">\n\t</div>\n\t<button type=\"button\" class=\"quantity__button quantity__button_minus\"></button>\n</div>",
-		"description": "Добавняет HTML формы с кол-вом"
+		"body": "<div data-quantity class=\"quantity\">\n\t<button data-quantity-minus type=\"button\" class=\"quantity__button quantity__button--minus\"></button>\n\t<div class=\"quantity__input\">\n\t\t<input data-quantity-value autocomplete=\"off\" type=\"text\" name=\"form[]\" value=\"1\">\n\t</div>\n\t<button data-quantity-plus type=\"button\" class=\"quantity__button quantity__button--plus\"></button>\n</div>",
+		"description": "Добавляет HTML формы с кол-вом"
+	},
+	"FullPage": {
+		"scope": "html",
+		"prefix": "fullpage",
+		"body": "<div data-fp class=\"${1:имя-блока}\">\n\t<div data-fp-section class=\"${1:имя-блока}__section\"></div>\n</div>",
+		"description": "Добавляет структуру экранной прокрутки страницы"
 	},
 	"Add tooltip": {
 		"scope": "html",
@@ -87,8 +107,8 @@
 	"Add image IBG": {
 		"scope": "html",
 		"prefix": "ibg",
-		"body": [
-			"<div class=\"${1:имя блока}__image-ibg\"><img data-src=\"@img$2\" alt=\"\"></div>"
+		"body": [			
+			"<img class=\"${1:имя блока}__image ibg\" src=\"@img$2\" alt=\"Image\">"
 		],
 		"description": "Добавляет объект с картинкой и классом IBG"
 	},
@@ -96,7 +116,7 @@
 		"scope": "html",
 		"prefix": "ibga",
 		"body": [
-			"<a href=\"\" class=\"${1:имя блока}__image-ibg\"><img data-src=\"@img$2\" alt=\"\"></a>"
+			"<a href=\"#\" class=\"${1:имя блока}__link\" ><img class=\"${1:имя блока}__image ibg\" src=\"@img$2\" alt=\"Image\"></a>"
 		],
 		"description": "Добавляет ссылку с картинкой и классом IBG"
 	},
@@ -104,12 +124,12 @@
 		"scope": "html",
 		"prefix": "inp",
 		"body": "<input autocomplete=\"off\" type=\"text\" name=\"form[]\" data-error=\"Ошибка\" placeholder=\"\" class=\"input\">",
-		"description": "Добавляет input со настройками"
+		"description": "Добавляет input с настройками"
 	},
 	"Add container": {
 		"scope": "html",
 		"prefix": "cnt",
-		"body": "<div class=\"${1:имя блока}__container\">\n\t$2\n</div>",
+		"body": "<div class=\"${1:name}__container\">\n\t$2\n</div>",
 		"description": "Добавляет ограничивающий контейнер"
 	},
 	"Adaptiv Value": {
@@ -124,15 +144,15 @@
 		"scope": "scss",
 		"prefix": "em",
 		"body": [
-			"em($1,$2)"
+			"toEm($1,$2)"
 		],
 		"description": "Вызов миксина перевода в EM"
 	},
 	"REM": {
 		"scope": "scss",
-		"prefix": "rem",
+		"prefix": "r",
 		"body": [
-			"rem($1)"
+			"toRem($1)"
 		],
 		"description": "Вызов миксина перевода в REM"
 	},
@@ -152,11 +172,27 @@
 		],
 		"description": "Отступ вниз с указанием %"
 	},
+	"Pharagraph": {
+		"scope": "html,js",
+		"prefix": "p",
+		"body": [
+			"<p>$1</p>"
+		],
+		"description": "Параграф тексту"
+	},
+	"Link": {
+		"scope": "html,js",
+		"prefix": "a",
+		"body": [
+			"<a href=\"$1\">$2</a>"
+		],
+		"description": "Параграф тексту"
+	},
 	"Font Size in REM": {
 		"scope": "scss",
 		"prefix": "fz",
 		"body": [
-			"font-size: rem($1);"
+			"font-size: toRem($1);"
 		],
 		"description": "Переводит PX в REM"
 	},
@@ -171,48 +207,60 @@
 	"Width with REM": {
 		"scope": "scss",
 		"prefix": "w",
-		"body": "width: rem($1);",
+		"body": "width: toRem($1);",
 		"description": "Добавляет width c переводом в REM"
 	},
 	"Height with REM": {
 		"scope": "scss",
 		"prefix": "h",
-		"body": "height: rem($1);",
+		"body": "height: toRem($1);",
 		"description": "Добавляет height c переводом в REM"
 	},
 	"Margin bottom with REM": {
 		"scope": "scss",
 		"prefix": "mb",
-		"body": "margin-bottom: rem($1);",
+		"body": "margin-bottom: toRem($1);",
 		"description": "Добавляет нижний отступ c переводом в REM"
+	},
+	"Margin bottom": {
+		"scope": "css",
+		"prefix": "mb",
+		"body": "margin-bottom: $1px;",
+		"description": "Добавляет нижнее отступление с переводом в REM"
 	},
 	"Margin top with REM": {
 		"scope": "scss",
 		"prefix": "mt",
-		"body": "margin-top: rem($1);",
-		"description": "Добавляет верхний отступ c переводом в REM"
+		"body": "margin-top: toRem($1);",
+		"description": "Добавляет верхнее отступление с переводом в REM"
+	},
+	"Margin top": {
+		"scope": "css",
+		"prefix": "mt",
+		"body": "margin-top: $1px;",
+		"description": "Добавляет верхнее отступление с переводом в REM"
 	},
 	"Margin bottom with EM": {
 		"scope": "scss",
 		"prefix": "mbe",
-		"body": "margin-bottom: em($1, $2);",
-		"description": "Добавляет нижний отступ c переводом в EM"
+		"body": "margin-bottom: toEm($1, $2);",
+		"description": "Добавляет нижнее отступление с переводом в EM"
 	},
 	"Margin Bottom not last-child": {
 		"scope": "scss",
 		"prefix": "mbl",
 		"body": [
-			"&:not(:last-child) {margin-bottom: $1px;}"
+			"&:not(:last-child) {margin-bottom: toRem($1);}"
 		],
-		"description": "Добавляет нижний отступ исключая последний объект"
+		"description": "Добавляет нижнее отступление, исключая последний объект"
 	},
 	"Margin Bottom not last-child with EM": {
 		"scope": "scss",
 		"prefix": "mble",
 		"body": [
-			"&:not(:last-child) {margin-bottom: em($1, $2);}"
+			"&:not(:last-child) {margin-bottom: toEm($1, $2);}"
 		],
-		"description": "Добавляет нижний отступ исключая последний объект c переводом в EM"
+		"description": "Добавляет нижнее отступление за исключением последнего объекта с переводом в EM"
 	},
 	"Not last-child": {
 		"scope": "scss",
@@ -222,8 +270,26 @@
 		],
 		"description": "Исключая последний объект"
 	},
-	"Opacity": {
+	"Gap": {
 		"scope": "scss",
+		"prefix": "g",
+		"body": "gap: toRem($1);",
+		"description": "Gap"
+	},
+	"Column Gap": {
+		"scope": "scss",
+		"prefix": "cg",
+		"body": "column-gap: toRem($1);",
+		"description": "Column Gap"
+	},
+	"Row Gap": {
+		"scope": "scss",
+		"prefix": "rg",
+		"body": "row-gap: toRem($1);",
+		"description": "Row Gap"
+	},
+	"Opacity": {
+		"scope": "scss,css",
 		"prefix": "op",
 		"body": "opacity: ${1:0};",
 		"description": "Добавляет относительный opacity"
@@ -231,34 +297,64 @@
 	"Line height": {
 		"scope": "scss",
 		"prefix": "lh",
-		"body": "line-height: math.div($1 , $2);",
+		"body": "line-height: $1;",
 		"description": "Добавляет относительный line-height"
 	},
-	"Color inherit": {
+	"Line height Divide": {
 		"scope": "scss",
-		"prefix": "ci",
-		"body": "color: inherit;",
-		"description": "Наследовать цвет предка"
+		"prefix": "lhd",
+		"body": "line-height: math.div($1 , $2);",
+		"description": "Добавляет относительный line-heightt"
+	},
+	"Align items center": {
+		"scope": "scss,css",
+		"prefix": "aic",
+		"body": "align-items: center;",
+		"description": "Align items center"
 	},
 	"Max width": {
 		"scope": "scss",
 		"prefix": "mw",
-		"body": "max-width: rem($1);",
+		"body": "max-width: toRem($1);",
+		"description": "Максимальна ширина"
+	},
+	"Form Email": {
+		"scope": "html",
+		"prefix": "formemail",
+		"body": "<form action=\"files/sendmail/sendmail.php\" method=\"POST\">\n\t<input type=\"text\" name=\"form[email]\" data-error=\"Error\" placeholder=\"E-mail\" class=\"input\">\n\t<button type=\"submit\" class=\"button\">Send</button>\n</form>",
 		"description": "Максимальная ширина"
 	},
 	"@media max": {
+		"scope": "scss",
 		"prefix": "md",
 		"body": [
-			"@media (max-width: em($1)){\n\t $2 \n}"
+			"@media (max-width: toEm($1)){\n\t $2 \n}"
 		],
 		"description": "Добавляет медиазапрос max-width c переводом в EM"
 	},
+	"@media max (CSS)": {
+		"scope": "css",
+		"prefix": "md",
+		"body": [
+			"@media (max-width: $1px){\n\t $2 \n}"
+		],
+		"description": "Добавляет медиазапрос max-width с переводом в EM"
+	},
 	"@media min": {
+		"scope": "scss",
 		"prefix": "mmd",
 		"body": [
-			"@media (min-width:em($1)){\n\t $2 \n}"
+			"@media (min-width:toEm($1)){\n\t $2 \n}"
 		],
-		"description": "Добавляет медиазапрос min-width c переводом в EM"
+		"description": "Добавляет медиазапрос min-width с переводом в EM"
+	},
+	"@media min (CSS)": {
+		"scope": "css",
+		"prefix": "mmd",
+		"body": [
+			"@media (min-width:$1px){\n\t $2 \n}"
+		],
+		"description": "Добавляет медиазапрос min-width с переводом в EM"
 	},
 	"Add data-popup": {
 		"scope": "html",
@@ -266,7 +362,7 @@
 		"body": [
 			"data-popup=\"$1\""
 		],
-		"description": "Добавляет трибут для открытия попапа"
+		"description": "Добавляет атрибут для открытия попапа."
 	},
 	"JS Click": {
 		"scope": "javascript,typescript",
@@ -309,107 +405,154 @@
 		"description": "z-index"
 	},
 	"fbpp": {
+		"scope": "scss",
 		"prefix": "fbpp",
 		"body": [
 			"flex: 0 0 percent($1, $2);"
 		],
 		"description": "fbpp"
 	},
-	"pp": {
+	"Padding REM": {
+		"scope": "scss",
+		"prefix": "pp",
+		"body": [
+			"padding: toRem(0) toRem(0) toRem(0) toRem(0);"
+		],
+		"description": "padding"
+	},
+	"Padding": {
+		"scope": "css",
 		"prefix": "pp",
 		"body": [
 			"padding: 0px 0px 0px 0px;"
 		],
 		"description": "padding"
 	},
-	"ppp": {
+	"Padding left and right REM": {
+		"scope": "scss",
 		"prefix": "ppp",
 		"body": [
-			"padding: 0px $1px;"
+			"padding: 0 toRem($1);"
 		],
-		"description": "padding2"
+		"description": "Padding left and right"
 	},
-	"ppt": {
-		"prefix": "ppt",
+	"Padding left and right": {
+		"scope": "css",
+		"prefix": "ppp",
 		"body": [
-			"padding: $1px 0px 0px 0px;"
+			"padding: 0 $1px;"
+		],
+		"description": "Padding left and right"
+	},
+	"Padding top REM": {
+		"scope": "scss",
+		"prefix": "pt",
+		"body": [
+			"padding-top: toRem($1);"
 		],
 		"description": "padding top"
 	},
-	"ppb": {
-		"prefix": "ppb",
+	"Padding top": {
+		"scope": "css",
+		"prefix": "pt",
 		"body": [
-			"padding: 0px 0px $1px 0px;"
+			"padding-top: $1px;"
+		],
+		"description": "padding top"
+	},
+	"Padding bottom REM": {
+		"scope": "scss",
+		"prefix": "pb",
+		"body": [
+			"padding-bottom: toRem($1);"
 		],
 		"description": "padding bottom"
 	},
-	"ppl": {
-		"prefix": "ppl",
+	"Padding bottom": {
+		"scope": "css",
+		"prefix": "pb",
 		"body": [
-			"padding: 0px 0px 0px $1px;"
+			"padding-bottom: $1px;"
+		],
+		"description": "padding bottom"
+	},
+	"Padding left REM": {
+		"scope": "scss",
+		"prefix": "pl",
+		"body": [
+			"padding-left: toRem($1);"
 		],
 		"description": "padding left"
 	},
-	"ppr": {
-		"prefix": "ppr",
+	"Padding left": {
+		"scope": "css",
+		"prefix": "pl",
 		"body": [
-			"padding: 0px $1px 0px 0px;"
+			"padding-left: $1px;"
+		],
+		"description": "padding left"
+	},
+	"Padding right REM": {
+		"scope": "scss",
+		"prefix": "pr",
+		"body": [
+			"padding-right: toRem($1);"
 		],
 		"description": "padding right"
 	},
-	"mm": {
+	"Padding right": {
+		"scope": "css",
+		"prefix": "pr",
+		"body": [
+			"padding-right: $1px;"
+		],
+		"description": "padding right"
+	},
+	"Margin REM": {
+		"scope": "scss",
+		"prefix": "mm",
+		"body": [
+			"margin: toRem(0) toRem(0) toRem(0) toRem(0);"
+		],
+		"description": "margin"
+	},
+	"Margin": {
+		"scope": "css",
 		"prefix": "mm",
 		"body": [
 			"margin: 0px 0px 0px 0px;"
 		],
 		"description": "margin"
 	},
-	"mr": {
+	"Margin to right": {
+		"scope": "scss,css",
 		"prefix": "mr",
 		"body": [
-			"margin: 0px 0px 0px auto;"
+			"margin: 0 0 0 auto;"
 		],
 		"description": "margin"
 	},
-	"mmm": {
+	"Margin left and right REM": {
+		"scope": "scss",
 		"prefix": "mmm",
 		"body": [
-			"margin: 0px $1px;"
+			"margin: 0 toRem($1);"
 		],
-		"description": "margin2"
+		"description": "margin left and right"
 	},
-	"mmt": {
-		"prefix": "mmt",
+	"Margin left and right": {
+		"scope": "css",
+		"prefix": "mmm",
 		"body": [
-			"margin: $1px 0px 0px 0px;"
+			"margin: 0 $1px;"
 		],
-		"description": "margin top"
+		"description": "margin left and right"
 	},
-	"mmb": {
-		"prefix": "mmb",
-		"body": [
-			"margin: 0px 0px $1px 0px;"
-		],
-		"description": "margin bottom"
-	},
-	"mml": {
-		"prefix": "mml",
-		"body": [
-			"margin: 0px 0px 0px $1px;"
-		],
-		"description": "margin left"
-	},
-	"mmr": {
-		"prefix": "mmr",
-		"body": [
-			"margin: 0px $1px 0px 0px;"
-		],
-		"description": "margin right"
-	},
-	"mu": {
+	"Margin 0 auto": {
+		"scope": "scss,css",
 		"prefix": "mu",
 		"body": [
-			"margin: 0px auto;"
+			"margin: 0 auto;"
 		],
 		"description": "margin center"
 	},
@@ -526,10 +669,10 @@
 		],
 		"description": "aa"
 	},
-	"aa": {
+	"Transition": {
 		"prefix": "aa",
 		"body": [
-			"transition: all 0.${1:3}s ease 0s;$2"
+			"transition: all 0.${1:3}s;$2"
 		],
 		"description": "aa"
 	},
@@ -597,13 +740,15 @@
 		"description": "fc"
 	},
 	"nc": {
+		"scope": "scss",
 		"prefix": "nc",
 		"body": [
 			"&:nth-child($0){}"
 		],
 		"description": "nc"
 	},
-	"BeforeAfter": {
+	"Before After": {
+		"scope": "scss",
 		"prefix": "ba",
 		"body": [
 			"&::before,&::after{\n\tcontent:'';\n\t$0\n}"
@@ -611,6 +756,7 @@
 		"description": "ba"
 	},
 	"After": {
+		"scope": "scss",
 		"prefix": "a",
 		"body": [
 			"&::after{\n\tcontent:'';\n\t$0\n}"
@@ -618,11 +764,19 @@
 		"description": "after"
 	},
 	"Before": {
+		"scope": "scss",
 		"prefix": "b",
 		"body": [
 			"&::before{\n\tcontent:'';\n\t$0\n}"
 		],
 		"description": "before"
+	},
+	"Text Align Center": {
+		"prefix": "tac",
+		"body": [
+			"text-align: center;"
+		],
+		"description": "text-align: center;"
 	},
 	"hv": {
 		"prefix": "hv",
@@ -661,10 +815,19 @@
 		],
 		"description": "ac_html"
 	},
-	"bg+": {
+	"bg+ @img": {
+		"scope": "scss",
 		"prefix": "bg+",
 		"body": [
 			"background: url('@img$0') 0 0 no-repeat;"
+		],
+		"description": "bg+"
+	},
+	"bg+": {
+		"scope": "css",
+		"prefix": "bg+",
+		"body": [
+			"background: url('../img$0') 0 0 no-repeat;"
 		],
 		"description": "bg+"
 	},
@@ -809,6 +972,15 @@
 		"description": "fbgq"
 	},
 	"fbp": {
+		"scope": "scss",
+		"prefix": "fbp",
+		"body": [
+			"flex: 0 0 toRem($1);"
+		],
+		"description": "fbp"
+	},
+	"fbp CSS": {
+		"scope": "css",
 		"prefix": "fbp",
 		"body": [
 			"flex: 0 0 $1px;"
@@ -869,12 +1041,12 @@
 	},
 	"Select": {
 		"prefix": "sel",
-		"body": "<select name=\"form[]\" class=\"form\">\n\t<option value=\"1\" selected>Пункт №1</option>\n\t<option value=\"2\">Пункт №2</option>\n\t<option value=\"3\">Пункт №3</option>\n\t<option value=\"4\">Пункт №4</option>\n</select>",
+		"body": "<select name=\"form[]\" data-class-modif=\"form\">\n\t<option value=\"1\" selected>Пункт №1</option>\n\t<option value=\"2\">Пункт №2</option>\n\t<option value=\"3\">Пункт №3</option>\n\t<option value=\"4\">Пункт №4</option>\n</select>",
 		"description": "sel"
 	},
 	"Radio buttons": {
 		"prefix": "opt",
-		"body": "<div class=\"options\">\n\t<div class=\"options__item\">\n\t\t<input hidden id=\"o_1\" class=\"options__input\" checked type=\"radio\" value=\"1\" name=\"option\">\n\t\t<label for=\"o_1\" class=\"options__label\"><span class=\"options__text\">${1:Текст}</span></label>\n\t</div>\n\t<div class=\"options__item\">\n\t\t<input hidden id=\"o_2\" class=\"options__input\" type=\"radio\" value=\"2\" name=\"option\">\n\t\t<label for=\"o_2\" class=\"options__label\"><span class=\"options__text\">${2:Текст}</span></label>\n\t</div>\n</div>",
+		"body": "<div class=\"options\">\n\t<div class=\"options__item\">\n\t\t<input id=\"o_1\" class=\"options__input\" checked type=\"radio\" value=\"1\" name=\"option\">\n\t\t<label for=\"o_1\" class=\"options__label\"><span class=\"options__text\">${1:Текст}</span></label>\n\t</div>\n\t<div class=\"options__item\">\n\t\t<input id=\"o_2\" class=\"options__input\" type=\"radio\" value=\"2\" name=\"option\">\n\t\t<label for=\"o_2\" class=\"options__label\"><span class=\"options__text\">${2:Текст}</span></label>\n\t</div>\n</div>",
 		"description": ""
 	},
 	"CheckBox": {
@@ -909,17 +1081,22 @@
 	},
 	"logo": {
 		"prefix": "logo",
-		"body": "<a href=\"\" class=\"header__logo\"><img data-src=\"../img/logo.svg\" alt=\"\"></a>",
+		"body": "<a href=\"\" class=\"header__logo\"><img src=\"@img/logo.svg\" alt=\"\"></a>",
 		"description": "logo"
 	},
-	"Image": {
+	"Image @img": {
 		"prefix": "img",
-		"body": "<img src=\"@img$0\" alt=\"\">",
+		"body": "<img src=\"@img$0\" alt=\"Image\">",
+		"description": "img"
+	},
+	"Image": {
+		"prefix": "im",
+		"body": "<img src=\"img$0\" alt=\"Image\">",
 		"description": "img"
 	},
 	"Image Lazy": {
 		"prefix": "imgl",
-		"body": "<img data-src=\"@img$0\" alt=\"\">",
+		"body": "<img data-src=\"@img$0\" alt=\"Image\">",
 		"description": "img lazy load"
 	},
 	/*
@@ -969,4 +1146,125 @@
 		"body": "background-color: #7A956B;",
 		"description": "bc3"
 	},
+	"Adaptiv Value margin": {
+		"scope": "scss",
+		"prefix": "avm",
+		"body": [
+			"@include adaptiveValue(\"${1:margin}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value margin top": {
+		"scope": "scss",
+		"prefix": "avmt",
+		"body": [
+			"@include adaptiveValue(\"${1:margin-top}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value margin bottom": {
+		"scope": "scss",
+		"prefix": "avmb",
+		"body": [
+			"@include adaptiveValue(\"${1:margin-bottom}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value margin right": {
+		"scope": "scss",
+		"prefix": "avmr",
+		"body": [
+			"@include adaptiveValue(\"${1:margin-right}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value margin left": {
+		"scope": "scss",
+		"prefix": "avml",
+		"body": [
+			"@include adaptiveValue(\"${1:margin-left}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value padding": {
+		"scope": "scss",
+		"prefix": "avp",
+		"body": [
+			"@include adaptiveValue(\"${1:padding}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value padding top": {
+		"scope": "scss",
+		"prefix": "avpt",
+		"body": [
+			"@include adaptiveValue(\"${1:padding-top}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value padding bottom": {
+		"scope": "scss",
+		"prefix": "avpb",
+		"body": [
+			"@include adaptiveValue(\"${1:padding-bottom}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value padding right": {
+		"scope": "scss",
+		"prefix": "avpr",
+		"body": [
+			"@include adaptiveValue(\"${1:padding-right}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Adaptiv Value padding left": {
+		"scope": "scss",
+		"prefix": "avpl",
+		"body": [
+			"@include adaptiveValue(\"${1:padding-left}\", $2, $3);"
+		],
+		"description": "Адаптивное свойство (clamp): CSS-свойство, начальное значение, конечное значение, ширина начальная, ширина конечная"
+	},
+	"Padding CSS": {
+		"scope": "css",
+		"prefix": "pp",
+		"body": [
+			"padding: 0px 0px 0px 0px;"
+		],
+		"description": "padding"
+	},
+	"Margin CSS": {
+		"scope": "css",
+		"prefix": "pp",
+		"body": [
+			"margin: 0px 0px 0px 0px;"
+		],
+		"description": "padding"
+	},
+	"Add Preloader": {
+		"scope": "html, htm",
+		"prefix": "prl",
+		"body": [
+			"@@include('html/_preloader.htm',{})"
+		],
+		"description": "Добавляет подключение прелоадера"
+	},
+	"Add popup": {
+		"scope": "html, htm",
+		"prefix": "pop",
+		"body": [
+			"@@include('html/_popup.htm',{})"
+		],
+		"description": "Добавляет HTML попапа"
+	},
+	"Use SVG": {
+		"prefix": "usvg",
+		"body": [
+			"<svg>",
+			"\t<use xlink:href=\"@img/icons/icons.svg#${1:назва іконки}\"></use>",
+			"</svg>"
+		],
+		"description": "use svg"
+	}
 }

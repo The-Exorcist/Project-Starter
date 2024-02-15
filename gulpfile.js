@@ -10,6 +10,7 @@ global.app = {
 	isBuild: process.argv.includes('--build'),
 	isDev: !process.argv.includes('--build'),
 	isWebP: !process.argv.includes('--nowebp'),
+	isImgOpt: !process.argv.includes('--noimgopt'),
 	isFontsReW: process.argv.includes('--rewrite'),
 	gulp: gulp,
 	path: path,
@@ -29,7 +30,7 @@ import { sprite } from "./config/gulp-tasks/sprite.js";
 import { gitignore } from "./config/gulp-tasks/gitignore.js";
 import { otfToTtf, ttfToWoff, fonstStyle } from "./config/gulp-tasks/fonts.js";
 
-// Последовательная обработака шрифтов
+// Последовательная обработка шрифтов
 const fonts = gulp.series(reset, otfToTtf, ttfToWoff, fonstStyle);
 // Основные задачи будем выполнять параллельно после обработки шрифтов
 const devTasks = gulp.parallel(fonts, gitignore);
@@ -61,9 +62,3 @@ export { deployZIP }
 
 // Выполнение сценария по умолчанию
 gulp.task('default', development);
-
-
-
-
-
-

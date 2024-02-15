@@ -40,12 +40,17 @@ export const css = () => {
 				)
 			)
 		)
-		// Раскомментировать если нужен не сжатый дубль файла стилей
-		//.pipe(app.gulp.dest(app.path.build.css))
+		.pipe(app.gulp.dest(app.path.build.css))
 		.pipe(
 			app.plugins.if(
 				app.isBuild,
-				cleanCss()
+				cleanCss({
+					level: {
+						1: {
+							tidySelectors: false
+						}
+					}
+				})
 			)
 		)
 		.pipe(app.plugins.rename({ suffix: ".min" }))
