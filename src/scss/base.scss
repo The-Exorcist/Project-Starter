@@ -1,43 +1,43 @@
-// Загальний файл елементів форм
-// Для підключення/відключення стилів конкретного елемента форми дивись base/forms/forms.scss
+// Общий файл элементов форм
+// Для подключения/отключения стилей конкретного элемента формы смотри base/forms/forms.scss
 @import "base/forms/forms";
 
-// Стилі меню + бургер
+// Стили меню + бургер
 // @import "base/menu";
 
-// Стилі попапів
+// Стили попапов
 // @import "base/popup";
 
-// Стилі спойлерів
+// Стили спойлеров
 // @import "base/spollers";
 
-// Стилі табів
+// Стили табов
 // @import "base/tabs";
 
-// Стилі мап
+// Стили карт
 // @import "base/maps";
 
-// Стилі блоку "показати ще"
+// Стили блока "показать еще"
 // @import "base/showmore";
 
-// Стилі для липкого блоку
+// Стили для липкого блока
 // @import "base/sticky";
 
-// Стилі для поекраної прокрутки
+// Стили для поэкранной прокрутки
 // Styles for fullpage scroll
 // @import "base/fullpage";
 
-// Стилі для ripple ефекту
+// Стили для ripple эффекта
 // Styles for ripple effect
 // @import "base/ripple";
 
-// Стилі для кастомного курсору
+// Стили для кастомного курсора
 // Styles for custom cursor
 // @import "base/cursor";
 
-// Стилі для чуйних зображеннь (IBG)
-// Сніппет (HTML): ibg (зображення з класами)
-// Сніппет (HTML): ibga (a з зображенням та класами)
+// Стили для отзывчивых изображений (IBG)
+// Сниппет (HTML): ibg (изображение с классами)
+// Сниппет (HTML): ibga (a с изображением и классами)
 .ibg {
 	width: 100%;
 	height: 100%;
@@ -59,11 +59,11 @@
 	}
 }
 
-// Шаблони (заготівлі)
-// @extend %ім'я шаблону;
-// Сніппет (SCSS): ex
+// Шаблоны (заготовки)
+// @extend %имя шаблона;
+// Сниппет (SCSS): ex
 
-// Лічильник для списку
+// Счетчик для списка
 %listCounter {
 	list-style-type: none;
 	counter-reset: item;
@@ -78,7 +78,7 @@
 		}
 	}
 }
-// Адаптивне відео
+// Адаптивное видео
 %responsiveVideo {
 	position: relative;
 	overflow: hidden;
@@ -95,7 +95,7 @@
 		height: 100%;
 	}
 }
-// Відео як фон
+// Видео в качестве фона
 %videoBackground {
 	video,
 	iframe,
@@ -113,7 +113,7 @@
 		background-size: cover;
 	}
 }
-// Сірий фільтр
+// Серый фильтр
 %grayfilter {
 	transition: all 0.3s ease 0s;
 	filter: grayscale(1);
@@ -123,19 +123,19 @@
 		}
 	}
 }
-// Скасувати виділення
+// Отменить выделение
 %noselect {
 	user-select: none;
 }
-// Дзеркальне відображення
+// Зеркальное отображение
 %mirror {
 	transform: scale(-1, 1);
 }
-// Плавний скролл
+// Плавный скролл
 %smoothscroll {
 	-webkit-overflow-scrolling: touch;
 }
-// Сховати скролл
+// Скрыть скролл
 %hidescroll {
 	&::-webkit-scrollbar {
 		display: none;

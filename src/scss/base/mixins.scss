@@ -1,4 +1,4 @@
-//Підключення шрифту
+//Подключение шрифта
 @mixin font($font_name, $file_name, $weight, $style) {
 	@font-face {
 		font-family: $font_name;
@@ -40,7 +40,7 @@
 	grid-template-columns: repeat(auto-#{$type}, minmax($min, $max));
 }
 
-// Адаптивна властивість (clamp)
+// Адаптивное свойство (clamp)
 @mixin adaptiveValue($property, $startSize, $minSize, $keepSize: 0, $widthFrom: $containerWidth, $widthTo: $minWidth) {
 	@if ($startSize==0) {
 		$startSize: 0.000001;
@@ -56,11 +56,11 @@
 		$widthFrom: $maxWidth;
 	}
 
-	// Брейк-поїнти в EM
+	// Брейк-поинты в EM
 	$widthFromMedia: toEm($widthFrom);
 	$widthToMedia: toEm($widthTo);
 
-	// Формула плаваючого значення
+	// Формула плавающего значения
 	// Источник: https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/
 	$slope: math.div(($startSize - $minSize), ($widthFrom - $widthTo));
 	$yIntersection: -$widthTo * $slope + $minSize;
@@ -69,26 +69,26 @@
 	}
 	$flyValue: #{toRem($yIntersection)}" + " #{$slope * 100}vw;
 
-	// Отримання значення властивості
+	// Получение значения свойства
 	$propertyValue: #{"clamp(" toRem($minSize) "," $flyValue "," toRem($startSize) ")"};
-	// Якщо негативні значення
+	// Если отрицательные значения
 	@if ($minSize > $startSize) {
 		$propertyValue: #{"clamp(" toRem($startSize) "," $flyValue "," toRem($minSize) ")"};
 	}
 
-	// Встановлюємо значення за замовчуванням
+	// Устанавливаем значение по умолчанию
 	@if $keepSize != 1 and $keepSize != 3 {
 		@media (min-width: $widthFromMedia) {
 			#{$property}: toRem($startSize);
 		}
 	}
-	// Адаптуємо розмір у проміжку між зазначеними ширинами в'юпорту
+	// Адаптируем размер в промежутке между указанными ширинами вьюпорта
 	@media (min-width: $widthToMedia) and (max-width: $widthFromMedia) {
-		// Якщо підтримується clamp();
+		// Если поддерживается clamp();
 		@supports (#{$property}: $propertyValue) {
 			#{$property}: $propertyValue;
 		}
-		// Якщо не підтримується clamp();
+		// Если не поддерживается clamp();
 		@supports not (#{$property}: $propertyValue) {
 			#{$property}: calc(#{toRem($minSize)} + #{$addSize} * (100vw - #{toRem($widthTo)}) / #{math.div($widthFrom, 16) - math.div($widthTo, 16)});
 		}
