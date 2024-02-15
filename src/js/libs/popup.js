@@ -13,7 +13,7 @@ class Popup {
 		let config = {
 			logging: true,
 			init: true,
-			// Для кнопок 
+			// Для кнопок
 			attributeOpenButton: 'data-popup', // Атрибут для кнопки, которая вызывает попап
 			attributeCloseButton: 'data-close', // Атрибут для кнопки, которая закрывает попап
 			// Для сторонних объектов
@@ -171,7 +171,7 @@ class Popup {
 	open(selectorValue) {
 		if (bodyLockStatus) {
 			// Если перед открытием попапа был режим lock
-			this.bodyLock = document.documentElement.classList.contains('lock') ? true : false;
+			this.bodyLock = document.documentElement.classList.contains('lock') && !this.isOpen ? true : false;
 
 			// Если ввести значение селектора (селектор настраивается в options)
 			if (selectorValue && typeof (selectorValue) === "string" && selectorValue.trim() !== "") {
@@ -319,9 +319,14 @@ class Popup {
 				null;
 
 		const buttons = document.querySelector(`[${this.options.attributeOpenButton} = "${classInHash}"]`) ? document.querySelector(`[${this.options.attributeOpenButton} = "${classInHash}"]`) : document.querySelector(`[${this.options.attributeOpenButton} = "${classInHash.replace('.', "#")}"]`);
+
+		this.youTubeCode = buttons.getAttribute(this.options.youtubeAttribute) ?
+			buttons.getAttribute(this.options.youtubeAttribute) :
+			null;
+
 		if (buttons && classInHash) this.open(classInHash);
 	}
-	// Утсановка хэша
+	// Установка хэша
 	_setHash() {
 		history.pushState('', '', this.hash);
 	}

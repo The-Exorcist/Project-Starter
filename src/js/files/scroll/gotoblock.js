@@ -13,7 +13,18 @@ export let gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop = 
 		let headerItemHeight = 0;
 		if (noHeader) {
 			headerItem = 'header.header';
-			headerItemHeight = document.querySelector(headerItem).offsetHeight;
+			const headerElement = document.querySelector(headerItem);
+			if (!headerElement.classList.contains('_header-scroll')) {
+				headerElement.style.cssText = `transition-duration: 0s;`;
+				headerElement.classList.add('_header-scroll');
+				headerItemHeight = headerElement.offsetHeight;
+				headerElement.classList.remove('_header-scroll');
+				setTimeout(() => {
+					headerElement.style.cssText = ``;
+				}, 0);
+			} else {
+				headerItemHeight = headerElement.offsetHeight;
+			}
 		}
 		let options = {
 			speedAsDuration: true,
@@ -40,6 +51,6 @@ export let gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop = 
 		}
 		FLS(`[gotoBlock]: Юхуу...едем к ${targetBlock}`);
 	} else {
-		FLS(`[gotoBlock]: Ой ой..Такого блока нет на странице: ${targetBlock}`);
+		FLS(`[gotoBlock]: Такого блока нет на странице:: ${targetBlock}`);
 	}
 };

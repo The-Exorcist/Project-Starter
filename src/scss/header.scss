@@ -9,8 +9,8 @@
 	@media (max-width: $mobile) {
 		display: block;
 		position: relative;
-		width: rem(30);
-		height: rem(18);
+		width: toRem(30);
+		height: toRem(18);
 		cursor: pointer;
 		z-index: 5;
 		span,
@@ -21,7 +21,7 @@
 			right: 0;
 			position: absolute;
 			width: 100%;
-			height: rem(2);
+			height: toRem(2);
 			background-color: #000;
 		}
 		&::before {
@@ -31,7 +31,7 @@
 			bottom: 0;
 		}
 		span {
-			top: calc(50% - rem(1));
+			top: calc(50% - toRem(1));
 		}
 		.menu-open & {
 			span {
@@ -41,11 +41,11 @@
 			&::after {
 			}
 			&::before {
-				top: calc(50% - rem(1));
+				top: calc(50% - toRem(1));
 				transform: rotate(-45deg);
 			}
 			&::after {
-				bottom: calc(50% - rem(1));
+				bottom: calc(50% - toRem(1));
 				transform: rotate(45deg);
 			}
 		}

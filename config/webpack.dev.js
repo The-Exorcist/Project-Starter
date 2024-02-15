@@ -10,7 +10,7 @@ const builFolder = "dist";
 const rootFolder = path.basename(path.resolve());
 
 let pugPages = fs.readdirSync(srcFolder).filter(fileName => fileName.endsWith('.pug'))
-let htmlPages = [];
+let htmlPages = []
 
 if (!pugPages.length) {
 	htmlPages = [new FileIncludeWebpackPlugin({
@@ -53,16 +53,20 @@ const config = {
 		compress: true,
 		port: 'auto',
 		hot: true,
-		host: 'local-ip',
+		host: 'local-ip', // localhost
+
 		// Расскоментировать на слабом ПК
+		// (в режиме разработчика папка c результатом (dist) будет создаваться на диске)
 		/*
 		devMiddleware: {
 			writeToDisk: true,
 		},
 		*/
+
 		watchFiles: [
 			`${paths.src}/**/*.html`,
 			`${paths.src}/**/*.pug`,
+			`${paths.src}/**/*.json`,
 			`${paths.src}/**/*.htm`,
 			`${paths.src}/img/**/*.*`
 		],
@@ -117,6 +121,31 @@ const config = {
 						}
 					}
 				]
+			}, {
+				test: /\.(jsx)$/,
+				exclude: /node_modules/,
+				use: [
+					{
+						loader: 'string-replace-loader',
+						options: {
+							search: '@img',
+							replace: '../../img',
+							flags: 'g'
+						}
+					}, {
+						loader: "babel-loader",
+						options: {
+							presets: ["@babel/preset-react"]
+						}
+					}
+				],
+			}, {
+				test: /\.(png|jpe?g|gif|svg)$/i,
+				use: [
+					{
+						loader: 'file-loader',
+					},
+				],
 			}
 		],
 	},

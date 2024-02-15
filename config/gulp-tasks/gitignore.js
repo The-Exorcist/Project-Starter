@@ -14,7 +14,7 @@ export const gitignore = () => {
 		fs.appendFile('./.gitignore', app.buildFolder + '\r\n', cb);
 		fs.appendFile('./.gitignore', '**/*.zip\r\n', cb);
 		fs.appendFile('./.gitignore', '**/*.rar\r\n', cb);
-		//if (projectName !== 'flsStart') deleteAsync('./.git/');
+		//if (projectName !== 'flsStart') del('./.git/');
 	}
 	return app.gulp.src(`${app.path.srcFolder}`);
 }
